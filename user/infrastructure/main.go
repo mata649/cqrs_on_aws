@@ -11,17 +11,12 @@ import (
 
 	"github.com/mata649/cqrs_on_aws/middleware"
 	"github.com/mata649/cqrs_on_aws/user/database"
-	"github.com/mata649/cqrs_on_aws/user/domain"
+	"github.com/mata649/cqrs_on_aws/user/repository"
 )
 
 type Config struct {
 	UserTable string `envconfig:"USER_TABLE"`
 }
-
-var (
-	userService domain.UserService
-	config      Config
-)
 
 func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	switch req.HTTPMethod {
@@ -48,11 +43,13 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 }
 
 func main() {
+	var config Config
 	err := envconfig.Process("", &config)
 	if err != nil {
 		log.Fatal(err)
 	}
-	userService = domain.NewUserService(database.NewUserDynamoRepository(config.UserTable))
+	repository.SetUserRepository(database.NewUserDynamoRepository(config.UserTable))
+
 	lambda.Start(router)
 
 }

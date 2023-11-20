@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/mata649/cqrs_on_aws/auth"
 	"github.com/mata649/cqrs_on_aws/response"
+	"github.com/mata649/cqrs_on_aws/user/application"
 	"github.com/mata649/cqrs_on_aws/user/domain"
 )
 
@@ -36,7 +37,7 @@ func CreateUserHandler(ctx context.Context, req events.APIGatewayProxyRequest) e
 		log.Println(err)
 		return badRequestResponse
 	}
-	resp := userService.Create(ctx, request)
+	resp := application.Create(ctx, request)
 	return response.HandleResponse(resp)
 }
 
@@ -48,7 +49,7 @@ func LoginUserHandler(ctx context.Context, req events.APIGatewayProxyRequest) ev
 		log.Println(err)
 		return badRequestResponse
 	}
-	resp := userService.Login(ctx, request)
+	resp := application.Login(ctx, request)
 
 	if resp.GetType() != http.StatusOK {
 		return response.HandleResponse(resp)
@@ -90,7 +91,7 @@ func DeleteUserHandler(ctx context.Context, req events.APIGatewayProxyRequest) e
 		UserID:        req.PathParameters["userID"],
 		CurrentUserID: req.Headers["CurrentUserID"],
 	}
-	resp := userService.Delete(ctx, request)
+	resp := application.Delete(ctx, request)
 
 	return response.HandleResponse(resp)
 }
@@ -104,7 +105,7 @@ func ChangePasswordHandler(ctx context.Context, req events.APIGatewayProxyReques
 		return badRequestResponse
 	}
 	request.CurrentUserID = req.Headers["CurrentUserID"]
-	resp := userService.ChangePassword(ctx, request)
+	resp := application.ChangePassword(ctx, request)
 	return response.HandleResponse(resp)
 
 }
@@ -117,6 +118,6 @@ func UpdateUserHandler(ctx context.Context, req events.APIGatewayProxyRequest) e
 		log.Println(err)
 		return badRequestResponse
 	}
-	resp := userService.Update(ctx, request)
+	resp := application.Update(ctx, request)
 	return response.HandleResponse(resp)
 }
