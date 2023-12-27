@@ -2,7 +2,7 @@
 
 build: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o ./bin/user_function ./infrastructure/
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o ./bin/task_function ./infrastructure/
 
 clean:
 	rm -rf ./bin ./vendor go.sum
