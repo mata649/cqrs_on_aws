@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -15,15 +14,14 @@ type CreateUserRequest struct {
 	ID       string    `json:"id"`
 	Username string    `json:"username"`
 	Password string    `json:"password"`
-	CreateAt time.Time `json:"createAt"`
+	CreateAt time.Time `json:"createdAt"`
 }
 
 func CreateUserHandler(commandBus command.Bus) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		req := CreateUserRequest{}
 		err := request.Binding(&req, r)
 		if err != nil {
-			log.Println(err)
 			response.WriteResponse(http.StatusBadRequest, "Bad Request", w)
 			return
 		}
@@ -31,5 +29,5 @@ func CreateUserHandler(commandBus command.Bus) http.HandlerFunc {
 
 		response.WriteResponse(resp.GetType(), resp.GetValue(), w)
 
-	})
+	}
 }

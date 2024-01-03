@@ -37,6 +37,7 @@ func Run() error {
 	queryBus.Register(authenticating.AuthenticateUserQueryType, authenticating.NewAuthenticateUserQueryHandler(authenticatingService))
 
 	server := server.NewServer(commandBus, queryBus)
+	server.SetupRoutes()
 	lambdaAdapter := adapter.NewLambdaAdapter(server)
 
 	lambda.StartWithOptions(lambdaAdapter.Handle, lambda.WithContext(context.Background()))

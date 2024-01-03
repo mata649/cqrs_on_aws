@@ -18,7 +18,7 @@ type LoginUserRequest struct {
 }
 
 func LoginUserHandler(queryBus query.Bus) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		req := LoginUserRequest{}
 		err := request.Binding(&req, r)
 		if err != nil {
@@ -61,6 +61,6 @@ func LoginUserHandler(queryBus query.Bus) http.HandlerFunc {
 		}
 		response.WriteResponse(http.StatusOK, string(jsonStr), w)
 
-	})
+	}
 
 }

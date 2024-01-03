@@ -3,6 +3,7 @@ package dynamo
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -15,6 +16,12 @@ import (
 type UserDynamoRepository struct {
 	db        *dynamodb.DynamoDB
 	tableName string
+}
+type UserD struct {
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 func NewUserDynamoRepository(tableName string) *UserDynamoRepository {
@@ -32,8 +39,15 @@ func NewUserDynamoRepository(tableName string) *UserDynamoRepository {
 func (repository UserDynamoRepository) Close() {
 
 }
+
 func (repository UserDynamoRepository) Create(ctx context.Context, user user.User) error {
-	av, err := dynamodbattribute.MarshalMap(user)
+	userD := UserD{
+		ID:        user.ID().String(),
+		Username:  user.Username().String(),
+		Password:  user.Password().String(),
+		CreatedAt: user.CreatedAt().Time(),
+	}
+	av, err := dynamodbattribute.MarshalMap(userD)
 	if err != nil {
 		return err
 	}
@@ -55,8 +69,9 @@ func (repository UserDynamoRepository) GetByID(ctx context.Context, id string) (
 	if err != nil {
 		return user.User{}, err
 	}
-
-	result, err := repository.db.QueryWithContext(ctx, &dynamodb.QueryInput{
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+	result, err := repository.db.QueryWithContext(ctxWithTimeout, &dynamodb.QueryInput{
 		TableName:                 aws.String(repository.tableName),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
@@ -66,7 +81,7 @@ func (repository UserDynamoRepository) GetByID(ctx context.Context, id string) (
 		return user.User{}, err
 	}
 
-	users := []user.User{}
+	users := []UserD{}
 
 	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &users)
 	if err != nil {
@@ -75,7 +90,11 @@ func (repository UserDynamoRepository) GetByID(ctx context.Context, id string) (
 	if len(users) == 0 {
 		return user.User{}, nil
 	}
-	return users[0], nil
+	userFound, err := user.NewUser(users[0].ID, users[0].Username, users[0].Password, users[0].CreatedAt)
+	if err != nil {
+		return user.User{}, err
+	}
+	return userFound, nil
 }
 func (repository UserDynamoRepository) GetByUsername(ctx context.Context, username string) (user.User, error) {
 	keyEx := expression.Key("username").Equal(expression.Value(username))
@@ -84,7 +103,7 @@ func (repository UserDynamoRepository) GetByUsername(ctx context.Context, userna
 		return user.User{}, err
 	}
 	result, err := repository.db.QueryWithContext(ctx, &dynamodb.QueryInput{
-		TableName:                 &repository.tableName,
+		TableName:                 aws.String(repository.tableName),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
@@ -94,7 +113,7 @@ func (repository UserDynamoRepository) GetByUsername(ctx context.Context, userna
 		return user.User{}, err
 	}
 
-	users := []user.User{}
+	users := []UserD{}
 
 	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &users)
 	if err != nil {
@@ -103,7 +122,11 @@ func (repository UserDynamoRepository) GetByUsername(ctx context.Context, userna
 	if len(users) == 0 {
 		return user.User{}, nil
 	}
-	return users[0], nil
+	userFound, err := user.NewUser(users[0].ID, users[0].Username, users[0].Password, users[0].CreatedAt)
+	if err != nil {
+		return user.User{}, err
+	}
+	return userFound, nil
 }
 func (repository UserDynamoRepository) Get(ctx context.Context) ([]user.User, error) {
 

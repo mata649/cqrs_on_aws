@@ -30,6 +30,7 @@ func (u CreateUserService) Create(ctx context.Context, id, username, password st
 		log.Println("Error getting user:", err)
 		return response.NewResponse(http.StatusInternalServerError, "Internal Server Error")
 	}
+
 	if userFound.ID().String() != "" {
 		return response.NewResponse(http.StatusNotFound, "Username already exists")
 	}
@@ -50,5 +51,5 @@ func (u CreateUserService) Create(ctx context.Context, id, username, password st
 		return response.NewResponse(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	return response.NewResponse(http.StatusCreated, "Video created successfully")
+	return response.NewResponse(http.StatusCreated, "User created successfully")
 }

@@ -14,7 +14,7 @@ type DeleteUserRequest struct {
 }
 
 func DeleteUserHandler(commandBus command.Bus) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
 		request := DeleteUserRequest{
 			UserID:        r.URL.Query().Get("userID"),
@@ -25,6 +25,5 @@ func DeleteUserHandler(commandBus command.Bus) http.HandlerFunc {
 
 		response.WriteResponse(resp.GetType(), resp.GetValue(), w)
 
-	})
-
+	}
 }

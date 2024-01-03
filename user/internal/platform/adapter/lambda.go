@@ -9,13 +9,11 @@ import (
 )
 
 type LambdaAdapter struct {
-	server    server.Server
 	chiLambda *chiadapter.ChiLambda
 }
 
-func NewLambdaAdapter(server server.Server) LambdaAdapter {
-	return LambdaAdapter{
-		server:    server,
+func NewLambdaAdapter(server server.Server) *LambdaAdapter {
+	return &LambdaAdapter{
 		chiLambda: chiadapter.New(server.Engine()),
 	}
 }

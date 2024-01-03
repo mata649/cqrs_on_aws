@@ -56,8 +56,8 @@ package:
     - ./bin/**
 
 functions:
-  user_service:
-    handler: ./bin/user_service
+  user_function:
+    handler: ./bin/user_function
     events:
       - httpApi:
           path: /users
@@ -69,8 +69,8 @@ functions:
           path: /users/{userID}
           method: delete
       - httpApi:
-          path: /users/changePassword
-          method: put
+          path: /health
+          method: get
       
          
     environment:
@@ -118,21 +118,21 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-resources:
-  Resources:
-    usersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${ssm:/users_tb_name}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: S
-        ProvisionedThroughput:
-          ReadCapacityUnits: 10
-          WriteCapacityUnits: 10
+# resources:
+#   Resources:
+#     usersTable:
+#       Type: AWS::DynamoDB::Table
+#       Properties:
+#         TableName: ${ssm:/users_tb_name}
+#         AttributeDefinitions:
+#           - AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: id
+#             KeyType: S
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 10
+#           WriteCapacityUnits: 10
     
   # Outputs:
   #    NewOutput:

@@ -8,6 +8,7 @@ import (
 
 func WriteResponse(status int, content interface{}, w http.ResponseWriter) {
 	w.WriteHeader(status)
+	w.Header().Set("Content-Type", "application/json")
 	switch content.(type) {
 	case string:
 		w.Write([]byte(`{"message":"` + content.(string) + `"`))

@@ -28,9 +28,12 @@ func (s Server) Engine() *chi.Mux {
 	return s.engine
 
 }
-func (s Server) Route() {
+
+func (s Server) SetupRoutes() {
+
+	s.engine.HandleFunc("/health/", handler.HealthCheckHandler())
 	s.engine.Post("/auth", handler.LoginUserHandler(s.queryBus))
-	s.engine.Post("/", handler.CreateUserHandler(s.commandBus))
+	s.engine.Post("/users", handler.CreateUserHandler(s.commandBus))
 	s.engine.Delete("/{userID}", middleware.ValidateJWTMiddleware(handler.DeleteUserHandler(s.commandBus)))
 
 }
