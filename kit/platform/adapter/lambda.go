@@ -5,14 +5,17 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	chiadapter "github.com/awslabs/aws-lambda-go-api-proxy/chi"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server"
+	"github.com/go-chi/chi/v5"
 )
 
 type LambdaAdapter struct {
 	chiLambda *chiadapter.ChiLambda
 }
+type Server interface {
+	Engine() *chi.Mux
+}
 
-func NewLambdaAdapter(server server.Server) *LambdaAdapter {
+func NewLambdaAdapter(server Server) *LambdaAdapter {
 	return &LambdaAdapter{
 		chiLambda: chiadapter.New(server.Engine()),
 	}

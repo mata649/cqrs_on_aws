@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/auth"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/request"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/response"
 	"github.com/mata649/cqrs_on_aws/kit/query"
 	"github.com/mata649/cqrs_on_aws/user/internal/authenticating"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/auth"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/request"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/response"
 )
 
 type LoginUserRequest struct {

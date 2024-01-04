@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/mata649/cqrs_on_aws/kit/command"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/request"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/response"
 	"github.com/mata649/cqrs_on_aws/user/internal/creating"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/request"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/response"
 )
 
 type CreateUserRequest struct {

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/auth"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/response"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/auth"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/response"
 )
 
 func ValidateJWTMiddleware(next http.Handler) http.HandlerFunc {

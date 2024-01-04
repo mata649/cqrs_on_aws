@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/response"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/response"
 )
 
 func HealthCheckHandler() http.HandlerFunc {

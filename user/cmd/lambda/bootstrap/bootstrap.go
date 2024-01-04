@@ -5,10 +5,10 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/mata649/cqrs_on_aws/kit/platform/adapter"
 	"github.com/mata649/cqrs_on_aws/user/internal/authenticating"
 	"github.com/mata649/cqrs_on_aws/user/internal/creating"
 	"github.com/mata649/cqrs_on_aws/user/internal/deleting"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/adapter"
 	"github.com/mata649/cqrs_on_aws/user/internal/platform/bus/inmemory"
 	"github.com/mata649/cqrs_on_aws/user/internal/platform/server"
 	"github.com/mata649/cqrs_on_aws/user/internal/platform/storage/dynamo"

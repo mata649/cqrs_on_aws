@@ -3,9 +3,9 @@ package server
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/mata649/cqrs_on_aws/kit/command"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/middleware"
 	"github.com/mata649/cqrs_on_aws/kit/query"
 	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/handler"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/middleware"
 )
 
 type Server struct {

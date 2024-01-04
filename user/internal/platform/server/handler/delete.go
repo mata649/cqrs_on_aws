@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/mata649/cqrs_on_aws/kit/command"
+	"github.com/mata649/cqrs_on_aws/kit/platform/server/response"
 	"github.com/mata649/cqrs_on_aws/user/internal/deleting"
-	"github.com/mata649/cqrs_on_aws/user/internal/platform/server/response"
 )
 
 type DeleteUserRequest struct {
