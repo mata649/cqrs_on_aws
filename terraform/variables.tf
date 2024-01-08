@@ -3,13 +3,13 @@ variable "users_tb_name" {
   default = "users"
 }
 
-variable "users_sns_topic" {
+variable "domain_sns_topic" {
   type = string
-  default = "users_topic"
+  default = "domain_sns_topic"
 }
 
-variable "users_created_queue" {
+variable "notify_subscribers_on_task_created" {
   type = string
-  default = "users_created"
+  default = "notify_subscribers_on_user_created"
   
 }

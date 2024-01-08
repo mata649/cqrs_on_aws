@@ -9,12 +9,12 @@ resource "aws_dynamodb_table" "users_tb" {
     type = "S"
   }
   attribute {
-    name = "username"
+    name = "email"
     type = "S"
   }
   global_secondary_index {
-    name = "username_index"
-    hash_key = "username"
+    name = "email_index"
+    hash_key = "email"
     write_capacity = 1
     read_capacity = 1
     projection_type = "ALL"
