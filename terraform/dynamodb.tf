@@ -21,3 +21,16 @@ resource "aws_dynamodb_table" "users_tb" {
   }
 
 }
+
+resource "aws_dynamodb_table" "tasks_tb" {
+  name           = var.tasks_tb_name
+  billing_mode   = "PROVISIONED"
+  hash_key       = "id"
+  read_capacity  = 1
+  write_capacity = 1
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+}

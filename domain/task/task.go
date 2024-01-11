@@ -21,8 +21,8 @@ func NewTaskID(value string) (TaskID, error) {
 	return TaskID{value: value}, nil
 }
 
-func (u TaskID) String() string {
-	return u.value
+func (t TaskID) String() string {
+	return t.value
 }
 
 type TaskTitle struct {
@@ -36,8 +36,8 @@ func NewTaskTitle(value string) (TaskTitle, error) {
 	return TaskTitle{value: value}, nil
 }
 
-func (u TaskTitle) String() string {
-	return u.value
+func (t TaskTitle) String() string {
+	return t.value
 }
 
 type TaskDescription struct {
@@ -51,8 +51,8 @@ func NewTaskDescription(value string) (TaskDescription, error) {
 	return TaskDescription{value: value}, nil
 }
 
-func (u TaskDescription) String() string {
-	return u.value
+func (t TaskDescription) String() string {
+	return t.value
 }
 
 type TaskCreatedAt struct {
@@ -68,8 +68,8 @@ func NewTaskCreatedAt(value time.Time) (TaskCreatedAt, error) {
 	return TaskCreatedAt{value: value}, nil
 }
 
-func (u TaskCreatedAt) Time() time.Time {
-	return u.value
+func (t TaskCreatedAt) Time() time.Time {
+	return t.value
 }
 
 type TaskUserID struct {
@@ -82,6 +82,9 @@ func NewTaskUserID(value string) (TaskUserID, error) {
 		return TaskUserID{}, errors.New("UserID: is not valid")
 	}
 	return TaskUserID{value: value}, nil
+}
+func (t TaskUserID) String() string {
+	return t.value
 }
 
 type Task struct {

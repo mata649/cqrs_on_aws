@@ -25,12 +25,8 @@ type UserD struct {
 	TasksCreated uint      `json:"tasksCreated"`
 }
 
-func NewUserDynamoRepository(tableName string) *UserDynamoRepository {
-	sess := session.Must(session.NewSessionWithOptions(
-		session.Options{
-			SharedConfigState: session.SharedConfigEnable,
-		},
-	))
+func NewUserDynamoRepository(tableName string, sess *session.Session) *UserDynamoRepository {
+
 	return &UserDynamoRepository{
 		db:        dynamodb.New(sess),
 		tableName: tableName,
@@ -64,39 +60,33 @@ func (repository UserDynamoRepository) Create(ctx context.Context, user user.Use
 
 }
 func (repository UserDynamoRepository) GetByID(ctx context.Context, id string) (user.User, error) {
-
-	keyEx := expression.Key("id").Equal(expression.Value(id))
-	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
-	if err != nil {
-		return user.User{}, err
-	}
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 1*time.Second)
-	defer cancel()
-	result, err := repository.db.QueryWithContext(ctxWithTimeout, &dynamodb.QueryInput{
-		TableName:                 aws.String(repository.tableName),
-		ExpressionAttributeNames:  expr.Names(),
-		ExpressionAttributeValues: expr.Values(),
-		KeyConditionExpression:    expr.KeyCondition(),
+	result, err := repository.db.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String(repository.tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id),
+			},
+		},
 	})
 	if err != nil {
 		return user.User{}, err
 	}
-
-	users := []UserD{}
-
-	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &users)
+	if result.Item == nil {
+		return user.User{}, nil
+	}
+	userD := UserD{}
+	err = dynamodbattribute.UnmarshalMap(result.Item, &userD)
 	if err != nil {
 		return user.User{}, err
 	}
-	if len(users) == 0 {
-		return user.User{}, nil
-	}
-	userFound, err := user.NewUser(users[0].ID, users[0].Email, users[0].CreatedAt, users[0].TasksCreated)
+	userFound, err := user.NewUser(userD.ID, userD.Email, userD.CreatedAt, userD.TasksCreated)
 	if err != nil {
 		return user.User{}, err
 	}
 	return userFound, nil
+
 }
+
 func (repository UserDynamoRepository) GetByEmail(ctx context.Context, email string) (user.User, error) {
 	keyEx := expression.Key("email").Equal(expression.Value(email))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()

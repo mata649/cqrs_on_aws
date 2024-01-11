@@ -22,5 +22,6 @@ func NewLambdaAdapter(server Server) *LambdaAdapter {
 }
 
 func (l LambdaAdapter) Handle(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+
 	return l.chiLambda.ProxyWithContext(ctx, req)
 }

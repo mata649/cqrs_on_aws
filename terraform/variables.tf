@@ -2,6 +2,10 @@ variable "users_tb_name" {
   type = string
   default = "users"
 }
+variable "tasks_tb_name" {
+  type = string
+  default = "tasks"
+}
 
 variable "domain_sns_topic" {
   type = string

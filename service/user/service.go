@@ -106,3 +106,25 @@ func (u UserService) Authenticate(ctx context.Context, email string) response.Re
 		CreatedAt: userFound.CreatedAt().Time(),
 	})
 }
+
+func (u UserService) GetByID(ctx context.Context, id string) response.Response {
+	userID, err := user.NewUserID(id)
+	if err != nil {
+		log.Println("Request error:", err)
+		return response.NewResponse(http.StatusBadRequest, response.ParseErrorResponse(err.Error()))
+	}
+	userFound, err := u.repository.GetByID(ctx, userID.String())
+	if err != nil {
+		log.Println("Error getting user:", err)
+		return response.NewResponse(http.StatusInternalServerError, "Internal Server Error")
+	}
+	if userFound.ID().String() == "" {
+		return response.NewResponse(http.StatusNotFound, "User not found")
+	}
+	return response.NewResponse(http.StatusOK, UserResponse{
+		ID:        userFound.ID().String(),
+		Email:     userFound.Email().String(),
+		CreatedAt: userFound.CreatedAt().Time(),
+	})
+
+}

@@ -8,13 +8,14 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/mata649/cqrs_on_aws/platform/adapter"
 	"github.com/mata649/cqrs_on_aws/platform/auth"
-	server "github.com/mata649/cqrs_on_aws/platform/server/user"
+	"github.com/mata649/cqrs_on_aws/platform/bus/inmemory"
+	server "github.com/mata649/cqrs_on_aws/platform/server/task"
 	"github.com/mata649/cqrs_on_aws/platform/storage/dynamo"
-	service "github.com/mata649/cqrs_on_aws/service/user"
+	"github.com/mata649/cqrs_on_aws/service/task/creating"
 )
 
 type Config struct {
-	UserTable string `envconfig:"USER_TABLE"`
+	UserTable string `envconfig:"TASK_TABLE"`
 	KeySecret string `evnconfig:"KEY_SECRET"`
 }
 
@@ -30,11 +31,14 @@ func Run() error {
 		},
 	))
 	auth.SetupAuth(config.KeySecret)
-	userRepo := dynamo.NewUserDynamoRepository(config.UserTable, sess)
-	userService := service.NewUserService(userRepo)
+	taskRepo := dynamo.NewTaskDynamoRepository(config.UserTable, sess)
+	taskService := creating.NewCreateTaskService(taskRepo)
+	commandBus := inmemory.NewCommandBus()
+	commandBus.Register(creating.CreateTaskCommandType, creating.NewCreateTaskCommandHandler(taskService))
 
-	server := server.NewServer(userService)
+	server := server.NewServer(commandBus)
 	server.SetupRoutes()
+
 	lambdaAdapter := adapter.NewLambdaAdapter(server)
 
 	lambda.StartWithOptions(lambdaAdapter.Handle, lambda.WithContext(context.Background()))
