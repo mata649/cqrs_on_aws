@@ -42,7 +42,6 @@ func (u UserService) Create(ctx context.Context, id, email string, createdAt tim
 	if userFound.ID().String() != "" {
 		return response.NewResponse(http.StatusNotFound, "Email already exists")
 	}
-
 	err = u.repository.Create(ctx, user)
 
 	if err != nil {
