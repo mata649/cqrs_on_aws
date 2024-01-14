@@ -14,8 +14,8 @@ package:
     - ./bin/**
 
 functions:
-  user_function:
-    handler: ./bin/user_function
+  user_service:
+    handler: ./bin/user_service
     events:
       - httpApi:
           path: /auth
@@ -29,21 +29,26 @@ functions:
       - httpApi:
           path: /users
           method: get
-  task_function:
-    handler: ./bin/task_function
+    environment:
+      USER_TABLE: ${ssm:/users_tb_name}
+  task_service:
+    handler: ./bin/task_service
     events:
       - httpApi:
           path: /tasks
           method: post
+    environment:     
+      TASK_TABLE: ${ssm:/tasks_tb_name}
+      EXCHANGE: ${ssm:/exchange}
+  on_task_created:
+    handler: ./bin/on_task_created
+    events:
+      - sqs: 
+          arn: ${ssm:/task_created_queue}
 
-         
-      
-         
     environment:
       USER_TABLE: ${ssm:/users_tb_name}
     
-      TASK_TABLE: ${ssm:/tasks_tb_name}
-     
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

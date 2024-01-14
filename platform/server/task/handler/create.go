@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -23,7 +22,6 @@ func CreateTaskHandler(commandBus command.Bus) http.HandlerFunc {
 		req := CreateTaskRequest{}
 		err := request.Binding(&req, r)
 		if err != nil {
-			log.Println(err)
 			response.WriteBindingErrorResponse(err.Error(), w)
 			return
 		}

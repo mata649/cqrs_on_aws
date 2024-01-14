@@ -18,6 +18,7 @@ type CreateUserRequest struct {
 func CreateUserHandler(userService service.UserService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := CreateUserRequest{}
+
 		err := request.Binding(&req, r)
 		if err != nil {
 			log.Println(err)

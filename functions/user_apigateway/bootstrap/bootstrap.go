@@ -24,6 +24,7 @@ func Run() error {
 	if err != nil {
 		return err
 	}
+
 	sess := session.Must(session.NewSessionWithOptions(
 		session.Options{
 			SharedConfigState: session.SharedConfigEnable,

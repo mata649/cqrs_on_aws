@@ -2,11 +2,16 @@
 
 build-user: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o ./bin/user_function ./functions/user_apigateway
+	env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/user_service ./functions/user_apigateway
 
+
+build-event: gomodgen
+	export GO111MODULE=on
+	env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/on_task_created ./functions/task_sqs
+	
 build-task: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o ./bin/task_function ./functions/task_apigateway
+	env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/task_service ./functions/task_apigateway
 
 clean:
 	rm -rf ./bin ./vendor go.sum
