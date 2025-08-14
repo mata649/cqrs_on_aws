@@ -5,6 +5,3 @@ This project is a demo of using CQRS and Event-Driven Architecture with DDD. Ter
 
 ## Diagram
 ![Diagram](https://raw.githubusercontent.com/mata649/cqrs_on_aws/main/diagram.png)
-
-## Note
-In this example, I have opted for a single database instead of two separate databases for the Command Query Responsibility Segregation (CQRS) implementation. The decision was made to keep the example straightforward and easy to understand. Introducing two databases might add unnecessary complexity, which could overshadow the primary focus of illustrating CQRS principles. Keep in mind that in a real-world scenario, the choice of using a single or multiple databases would depend on the specific requirements and complexities of the application.
